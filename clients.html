@@ -29,7 +29,6 @@
             margin-bottom: 20px;
         }
 
-        /* Styles pour la barre de navigation */
         .nav {
             list-style: none;
             padding: 0;
@@ -73,19 +72,11 @@
             border-right: 1px solid #ddd;
         }
 
-        .sidebar .nav-link {
-            font-size: 18px;
-        }
-
-        /* Ajouter un scroll si la liste des clients est trop longue */
         #clientList {
             max-height: 400px;
-            /* Hauteur maximale */
             overflow-y: auto;
-            /* Activation du défilement vertical */
         }
 
-        /* Styles pour la recherche et les filtres */
         .search-container {
             margin-bottom: 20px;
         }
@@ -94,7 +85,6 @@
             font-size: 16px;
         }
 
-        /* Boutons pour les actions sur les clients */
         .btn-action {
             margin: 5px;
         }
@@ -110,10 +100,8 @@
 </head>
 
 <body>
-
     <div class="container-fluid">
         <div class="row">
-            <!-- Barre de navigation -->
             <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
                 <div class="position-sticky">
                     <ul class="nav flex-column">
@@ -130,11 +118,9 @@
                 </div>
             </nav>
 
-            <!-- Contenu principal -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <h2>Liste des Clients</h2>
 
-                <!-- Barre de recherche -->
                 <div class="search-container">
                     <input type="text" class="form-control" id="searchClient" placeholder="Rechercher un client..."
                         onkeyup="filterClients()">
@@ -143,7 +129,7 @@
                 <div class="card">
                     <div class="card-body">
                         <ul class="list-group list-group-flush" id="clientList">
-                            <!-- La liste des clients sera ajoutée ici -->
+                            <!-- Liste dynamique -->
                         </ul>
                     </div>
                 </div>
@@ -152,28 +138,18 @@
     </div>
 
     <script>
-        // Simuler les données des clients
-        const clientsData = [
-            { id: 1, name: 'John Doe', phone: '0123456789', favorite: false, archived: false, details: { email: 'john@example.com', payments: [{ date: '2024-01-01', amount: 1500 }] } },
-            { id: 2, name: 'Jane Smith', phone: '0987654321', favorite: false, archived: false, details: { email: 'jane@example.com', payments: [{ date: '2024-01-05', amount: 2000 }] } },
-            { id: 3, name: 'Robert Brown', phone: '0147852369', favorite: true, archived: false, details: { email: 'robert@example.com', payments: [{ date: '2024-01-10', amount: 500 }] } },
-        ];
-
-        // Récupérer les clients depuis localStorage (si présents)
         function getClients() {
-            return JSON.parse(localStorage.getItem('clients')) || clientsData;
+            return JSON.parse(localStorage.getItem('clients')) || [];
         }
 
-        // Sauvegarder les clients dans localStorage
         function saveClients(clients) {
             localStorage.setItem('clients', JSON.stringify(clients));
         }
 
-        // Afficher la liste des clients
         function renderClientList() {
             const clients = getClients();
             const clientList = document.getElementById('clientList');
-            clientList.innerHTML = '';  // Vider la liste existante
+            clientList.innerHTML = '';
 
             if (clients.length === 0) {
                 const noClientsMessage = document.createElement('li');
@@ -193,55 +169,10 @@
             }
         }
 
-        // Fonction de filtre pour la recherche de client
-        function filterClients() {
-            const searchTerm = document.getElementById('searchClient').value.toLowerCase();
-            const filteredClients = getClients().filter(client => client.name.toLowerCase().includes(searchTerm));
-            renderFilteredClients(filteredClients);
-        }
-
-        function renderFilteredClients(clients) {
-            const clientList = document.getElementById('clientList');
-            clientList.innerHTML = '';
-            clients.forEach(client => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.textContent = `${client.name} - ${client.phone}`;
-                clientList.appendChild(li);
-            });
-        }
-
-        // Toggle favori
-        function toggleFavorite(clientId) {
-            const clients = getClients();
-            const client = clients.find(c => c.id === clientId);
-            client.favorite = !client.favorite;
-            saveClients(clients);
-            renderClientList();
-        }
-
-        // Archiver un client
-        function archiveClient(clientId) {
-            const clients = getClients();
-            const client = clients.find(c => c.id === clientId);
-            client.archived = !client.archived;
-            saveClients(clients);
-            renderClientList();
-        }
-
-        // Voir les détails d'un client
-        function viewClientDetails(clientId) {
-            const clients = getClients();
-            const client = clients.find(c => c.id === clientId);
-            alert(`Nom: ${client.name}\nEmail: ${client.details.email}\nPaiements: ${client.details.payments.map(p => `Date: ${p.date}, Montant: ${p.amount}`).join("\n")}`);
-        }
-
-        // Initialisation
         document.addEventListener('DOMContentLoaded', function () {
             renderClientList();
         });
     </script>
-
 </body>
 
 </html>
